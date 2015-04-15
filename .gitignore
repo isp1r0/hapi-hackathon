@@ -6,7 +6,8 @@ lib-cov
 *.out
 *.pid
 *.gz
-
+*.zip
+*.rar
 pids
 results
 npm-debug.log

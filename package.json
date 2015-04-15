@@ -1,12 +1,12 @@
 {
-  "name": "hapi-ninja",
+  "name": "hapi-hackathon",
   "description": "Boilerplate Hapi server example. Node.js, Hapi, and Swig.",
-  "version": "0.4.1",
-  "author": "Saul Maddox",
+  "version": "0.0.1",
+  "author": "Minh Nguyen",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/poeticninja/hapi-ninja.git"
+    "url": "https://github.com/truongminh/hapi-hackathon.git"
   },
   "main": "server.js",
   "engines": {
@@ -33,13 +33,5 @@
     "hapi-auth-cookie": "^2.0.0",
     "bcrypt-nodejs": "0.0.3",
     "fb": "^0.7.0"
-  },
-  "devDependencies": {
-    "gulp": "~3.8.7",
-    "gulp-concat": "~2.3.4",
-    "gulp-imagemin": "~1.0.1",
-    "gulp-minify-css": "~0.3.7",
-    "gulp-uglify": "~1.0.0",
-    "gulp-util": "~3.0.1"
   }
 }

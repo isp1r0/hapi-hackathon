@@ -17,7 +17,7 @@ var login = function (request, reply) {
         return reply.redirect('/');
     }
 
-    return reply.redirect(FB.getLoginUrl({ scope: 'user_about_me' }));
+    return reply.redirect(FB.getLoginUrl({ scope: 'user_about_me,email,user_videos' }));
 
     /*if (request.method === 'post') {
         User.login(request.payload, function (err, message, user) {
@@ -37,6 +37,11 @@ var login = function (request, reply) {
     }*/
 };
 
+var Video = require('src/dao/video');
+var Q = require('q');
+var _ = require('lodash');
+var FacebookGraphAPI = Q.denodeify(FB.napi);
+
 var loginCallback = function (request, reply) {
     if (request.query.error) {
         // user might have disallowed the app
@@ -48,43 +53,43 @@ var loginCallback = function (request, reply) {
         return reply.redirect('/');
     }
     
-    FB.napi('oauth/access_token', {
+    FacebookGraphAPI('oauth/access_token', {
         client_id:      FB.options('appId'),
         client_secret:  FB.options('appSecret'),
         redirect_uri:   FB.options('redirectUri'),
         code:           code
-    }, function (err, result) {
-        if(err) {
-            console.log(err);
-            return reply('unable to get token ' + err).code(400);
-        }
+    }).then(function (result) {
 
         var access_token = result.access_token;
 
-        FB.napi('/me', {access_token: access_token} , function (err, result) {
-            if(err) {
-                console.log(err);
-                return reply('error verify ' + err).code(400);
+        FB.napi('/me/videos', {access_token: access_token}, function (err, data) {
+            if (err) {
+                return;
             }
-            // name, id
-            var newUser = User({
-                username: result.name,
-                facebook: {
-                    name: result.name,
-                    id: result.id,
-                    access_token: access_token
-                }
-            });
 
-            newUser.save(function (err, user) {
-                if (err) {
-                    console.log(err);
-                    return reply('error save user').code(500);
-                }
-                request.auth.session.set(user);
-                return reply.redirect('/');
-            });            
+            _.forEach(data.data, function(v) {
+                Video(v).save(console.log);
+            });          
         });
+
+        return FacebookGraphAPI('/me', {access_token: access_token})
+        .then(function (profile) {
+            return Q.ninvoke(User, 'FacebookLogin', profile, access_token);
+        });
+    }).then(function (user) {
+        if (!user) {
+            throw new Error("cannot save user to mongodb ");
+        }
+        request.auth.session.set(user);
+    })
+    .done(function(err) {
+        if (err) {
+            console.log(err);
+            reply().code(500);
+        } else {
+            reply.redirect('/');
+        }
+        
     });
 };
 
@@ -92,6 +97,21 @@ var logout = function (request, reply) {
 
     request.auth.session.clear();
     return reply.redirect('/');
+};
+
+var home = function (request, reply) {
+    
+    var user = request.auth.credentials;
+    if (!user || !user.facebook) {
+        return reply("please link facebook");
+    } 
+
+    Video.find({'from.id': user.facebook.id}, function (err, videos) {
+        reply.view('index', {
+            title: 'Your Videos',
+            videos: videos
+        });
+    });    
 };
 
 exports.register = function(server, options, next){
@@ -103,7 +123,7 @@ exports.register = function(server, options, next){
             config: {
                 handler: function(request, reply){
                     reply.view('about', {
-                        title: 'Super Informative About Page'
+                        title: 'About this app'
                     });
                 },
                 id: 'about'
@@ -113,12 +133,7 @@ exports.register = function(server, options, next){
             method: 'GET',
             path: '/',
             config: {
-                handler: function(request, reply) {
-                    // Render the view with the custom greeting
-                    reply.view('index', {
-                        title: 'Awesome Boilerplate Homepage'
-                    });
-                },
+                handler: home,
                 id: 'index',
                 auth: 'session'
             }
@@ -172,7 +187,7 @@ exports.register = function(server, options, next){
             config: {
                 handler: function(request, reply){
                     reply.view('404', {
-                        title: 'Total Bummer 404 Page'
+                        title: '404 Page'
                     }).code(404);
                 },
                 id: '404'

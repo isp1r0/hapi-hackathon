@@ -2,50 +2,46 @@
 
 var Joi = require('joi');
 
-var userController = require('src/controllers/user');
+var Controller = require('src/controllers/video');
+
 exports.register = function(server, options, next){
 	server.route([
 		{
 			method: 'GET',
-			path: '/users/{email}',
+			path: '/videos/{id}',
 			config: {
-				handler: userController.findByEmail,
+				handler: Controller.findById,
 				validate: {
 					params: {
-						email: Joi.string().min(2).required()
+						id: Joi.string().min(2).required()
 					}
 				}
 			}
 		},
 		{
 			method: 'GET',
-			path: '/users',
+			path: '/videos',
 			config: {
-				handler: userController.findAll
+				handler: Controller.findAll,
+				auth: 'session'
 			}
 		},
 		{
 			method: 'POST',
-			path: '/users',			
+			path: '/videos',			
 			config: {
 				payload: {
 					parse: true,
 					override: "application/json"
 				},
-				handler: userController.insert,
-				validate: { 
-			        payload: { 
-			            email: Joi.string().min(2).required(), 
-			           	password: Joi.string().min(2).required()
-			    	}
-			   	}
+				handler: Controller.insert
 			}
 		},
 		{
 			method: 'DELETE',
-			path: '/users/{id}',
+			path: '/videos/{id}',
 			config: {
-				handler: userController.delete,
+				handler: Controller.delete,
 				validate: {
 					params: {
 						id: Joi.string().required()
@@ -58,5 +54,5 @@ exports.register = function(server, options, next){
 };
 
 exports.register.attributes = {
-    name: 'user'
+    name: 'video'
 };

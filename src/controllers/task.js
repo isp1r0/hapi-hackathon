@@ -5,10 +5,8 @@ var Q = require('q');
 var taskDAO = require('src/dao/task');
 var _ = require('lodash');
 
-var ReplyHelper = require('src/controllers/reply-helper');
-
 function TaskController(){};
-TaskController.prototype = (function(){
+/*TaskController.prototype = (function(){
 
 	return {
 		findByID: function findByID(request, reply) {
@@ -100,7 +98,7 @@ TaskController.prototype = (function(){
 			});
 		}
 	}
-})();
+})();*/
 
 var taskController = new TaskController();
 module.exports = taskController;

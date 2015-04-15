@@ -9,5 +9,19 @@
     </ul>
 
     <h1>{{title}}</h1>
-    <p>This is the homepage. AKA Index.</p>
+    <ul>
+    {% for video in videos %}
+    	<li>
+    	<div>
+    		Name: {{video.name}}
+    	</div>
+    	<div>
+    		Description: {{video.description}}
+    	</div>
+    	{% autoescape true %}
+            {{video.embed_html}}
+        {% endautoescape %}
+    	</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

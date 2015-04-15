@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 
 var taskSchema = new mongoose.Schema({
-	_id: { type: String, required: true, index: { unique: true } },
+  _id: { type: String, required: true, index: { unique: true } },
   userId: { type: String, required: true, index: { unique: true } },
   description: { type: String, required: true}
 });

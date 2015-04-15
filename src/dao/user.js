@@ -3,7 +3,7 @@ var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
-	username: {type: String, unique: true},
+  email: { type: String, index: {unique: true}, lowercase: true },
   password: String,
 
   facebook: {
@@ -51,37 +51,64 @@ var Joi = require('joi');
 userSchema.statics.login = function (params, cb) {
 
   var schema = Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(30).required(),
+    email: Joi.string().alphanum().min(3).max(30).required(),
     password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/)
   });
 
 
   var result = Joi.validate(params, schema, {allowUnknown:true});
   if (result.error) {
-      return cb(null, "username and password must not be empty");
+      return cb(null, "email and password must not be empty");
   }
 
   var credentials = result.value;
 
-  var username = credentials.username.toLowerCase();
+  var email = credentials.email.toLowerCase();
   var password = credentials.password;
 
-  this.findOne({username: username}, function(err, user) {
+  this.findOne({email: email}, function(err, user) {
     if (err) {
       return cb(err);
     }
     if (!user) {
-      return cb(null, 'username ' + username + ' not found');
+      return cb(null, 'email ' + email + ' not found');
     }
 
     user.comparePassword(password, function(err, isMatch) {
       if (isMatch) {
         return cb(null, null, user);
       } else {
-        return cb(null, 'wrong password for ' + username);
+        return cb(null, 'wrong password for ' + email);
       }
     });
   });
 };
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.statics.FacebookLogin = function (profile, access_token, cb) {
+  this.findOne({'facebook.id': profile.id}, function (err, user) {
+    if (err) {
+      return cb(err);
+    }
+    if (!user) {
+      user = User({
+          email: profile.email,
+          facebook: {
+              name: profile.name,
+              id: profile.id,
+              access_token: access_token
+          }
+      });
+    } else {
+      user.facebook.access_token = access_token;
+    }
+    user.save(function (err, data) {
+      cb(err, data);
+    });
+  });
+};
+
+
+
+var User = mongoose.model('User', userSchema);
+
+module.exports = User;

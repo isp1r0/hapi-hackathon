@@ -4,21 +4,24 @@
 
 "use strict";
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/movie');
-mongoose.connection.on('error', function() {
-  console.error('MongoDB Connection Error. Please make sure that MongoDB is running.');
-});
 
 var Hapi = require('hapi');
+var constants = require('src/config/constants');
 
 // Create a new server
 var server = new Hapi.Server();
-
 // Setup the server with a host and port
 server.connection({
-    port: parseInt(process.env.PORT, 10) || 3000,
-    host: '0.0.0.0'
+    host: constants.application.host, 
+    port: constants.application.port
+});
+
+
+var mongoose = require('mongoose');
+mongoose.connect(constants.database);
+mongoose.connection.on('error', function(err) {
+    console.error(err, constants.database); 
+    console.error('MongoDB Connection Error. Please make sure that MongoDB is running.');
 });
 
 // Setup the views engine and folder
@@ -80,6 +83,9 @@ server.register([
     },
     {
         register: routes.user
+    },
+    {
+        register: routes.video
     }
 ], function () {
     //Start the server

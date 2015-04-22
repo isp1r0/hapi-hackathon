@@ -16,11 +16,34 @@
     		Name: {{video.name}}
     	</div>
     	<div>
-    		Description: {{video.description}}
+    		Message: {{video.message}}
     	</div>
-    	{% autoescape true %}
-            {{video.embed_html}}
-        {% endautoescape %}
+        <div>
+            Story: {{video.story}}
+        </div>
+        <div>
+            Link: {{video.link}}
+        </div>
+        <div>
+            Share: {{video.shares.count}}
+        </div>
+        <div>
+            Like:
+            <table>
+            <thead>
+                <th>Name</th>
+                <th>Id</th>
+            </thead>
+            <tbody>
+            {% for like in video.likes.data %}
+                <tr>
+                    <td>{{like.name}}</td>
+                    <td>{{like.id}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
     	</li>
     {% endfor %}
     </ul>

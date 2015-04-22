@@ -17,7 +17,7 @@ var login = function (request, reply) {
         return reply.redirect('/');
     }
 
-    return reply.redirect(FB.getLoginUrl({ scope: 'user_about_me,email,user_videos' }));
+    return reply.redirect(FB.getLoginUrl({ scope: 'user_about_me,email,read_stream' }));
 
     /*if (request.method === 'post') {
         User.login(request.payload, function (err, message, user) {
@@ -62,18 +62,20 @@ var loginCallback = function (request, reply) {
 
         var access_token = result.access_token;
 
-        FB.napi('/me/videos', {access_token: access_token}, function (err, data) {
-            if (err) {
-                return;
-            }
 
-            _.forEach(data.data, function(v) {
-                Video(v).save(console.log);
-            });          
-        });
 
         return FacebookGraphAPI('/me', {access_token: access_token})
         .then(function (profile) {
+            FB.napi('/me/home', {access_token: access_token, filter: 'app_2392950137'}, function (err, data) {
+                if (err) {
+                    return;
+                }
+
+                _.forEach(data.data, function(v) {
+                    v.user = profile.id;
+                    Video(v).save();
+                });          
+            });
             return Q.ninvoke(User, 'FacebookLogin', profile, access_token);
         });
     }).then(function (user) {
@@ -106,7 +108,7 @@ var home = function (request, reply) {
         return reply("please link facebook");
     } 
 
-    Video.find({'from.id': user.facebook.id}, function (err, videos) {
+    Video.find({'user': user.facebook.id}, function (err, videos) {
         reply.view('index', {
             title: 'Your Videos',
             videos: videos

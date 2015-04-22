@@ -85,7 +85,7 @@ userSchema.statics.login = function (params, cb) {
 };
 
 userSchema.statics.FacebookLogin = function (profile, access_token, cb) {
-  this.findOne({'facebook.id': profile.id}, function (err, user) {
+  this.findOne({'email': profile.email}, function (err, user) {
     if (err) {
       return cb(err);
     }

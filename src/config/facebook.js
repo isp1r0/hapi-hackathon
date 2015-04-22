@@ -2,7 +2,7 @@
 Visit Facebook Developers
 Click Apps > Create a New App in the navigation bar
 Enter Display Name, then choose a category, then click Create app
-Copy and paste App ID and App Secret keys into config/secrets.js
+Copy and paste App ID and App Secret keys into config/facebook.js
 App ID is clientID, App Secret is clientSecret
 Click on Settings on the sidebar, then click + Add Platform
 Select Website

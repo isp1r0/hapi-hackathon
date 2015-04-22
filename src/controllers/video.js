@@ -32,7 +32,7 @@ module.findAll = function (request, reply) {
 	if (!user || !user.facebook) {
 		return	reply(' no associated facebook account');
 	} 
-	Model.find({'from.id': user.facebook.id}, replyHelper.find(request, reply));
+	Model.find({'user': user.facebook.id}, replyHelper.find(request, reply));
 };
 
 })(module.exports);

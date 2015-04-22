@@ -1,9 +1,14 @@
+"use strict";
+
+var constants = require('src/config/constants');
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/test');
-mongoose.connection.on('error', function() {
-  console.error('MongoDB Connection Error. Please make sure that MongoDB is running.');
+mongoose.connect(constants.database);
+mongoose.connection.on('error', function(err) {
+    console.error(err, constants.database); 
+    console.error('MongoDB Connection Error. Please make sure that MongoDB is running.');
 });
+
 
 var User = require('./src/dao/user');
 

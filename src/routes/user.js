@@ -2,17 +2,18 @@
 
 var Joi = require('joi');
 
-var userController = require('src/controllers/user');
+var Controller = require('src/controllers/user');
+
 exports.register = function(server, options, next){
 	server.route([
 		{
 			method: 'GET',
-			path: '/users/{email}',
+			path: '/users/{id}',
 			config: {
-				handler: userController.findByEmail,
+				handler: Controller.findOne,
 				validate: {
 					params: {
-						email: Joi.string().min(2).required()
+						id: Joi.string().min(2).required()
 					}
 				}
 			}
@@ -21,7 +22,7 @@ exports.register = function(server, options, next){
 			method: 'GET',
 			path: '/users',
 			config: {
-				handler: userController.findAll
+				handler: Controller.findAll
 			}
 		},
 		{
@@ -32,7 +33,7 @@ exports.register = function(server, options, next){
 					parse: true,
 					override: "application/json"
 				},
-				handler: userController.insert,
+				handler: Controller.insert,
 				validate: { 
 			        payload: { 
 			            email: Joi.string().min(2).required(), 
@@ -45,7 +46,7 @@ exports.register = function(server, options, next){
 			method: 'DELETE',
 			path: '/users/{id}',
 			config: {
-				handler: userController.delete,
+				handler: Controller.delete,
 				validate: {
 					params: {
 						id: Joi.string().required()

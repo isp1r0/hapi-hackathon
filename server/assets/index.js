@@ -1,62 +1,49 @@
-// These are the public assets. Goal is to serve css, js, partials, images, or bower packages.
-exports.register = function(server, options, next){
+"use strict";
 
-    server.route([
-        {
-            method: 'GET',
-            path: '/partials/{path*}',
-            config: {
-                handler: {
-                    directory: { path: './server/views/partials' }
-                },
-                id: 'partials'
-            }
-        },
-        {
-            method: 'GET',
-            path: '/images/{path*}',
-            config: {
-                handler: {
-                    directory: { path: './public/images' }
-                },
-                id: 'images'
-            }
-        },
-        {
-            method: 'GET',
-            path: '/css/{path*}',
-            config: {
-                handler: {
-                    directory: { path: './public/css' }
-                },
-                id: 'css'
-            }
-        },
-        {
-            method: 'GET',
-            path: '/js/{path*}',
-            config: {
-                handler: {
-                    directory: { path: './public/js' }
-                },
-                id: 'js'
-            }
-        },
-        {
-            method: 'GET',
-            path: '/bower_components/{path*}',
-            config: {
-                handler: {
-                    directory: { path: './public/bower_components' }
-                },
-                id: 'bower'
-            }
-        }
-    ]);
+var bower_components =
+{
+    js: [        
+        "jquery/dist/jquery.js",
+        "bootstrap/dist/js/bootstrap.js",
+    ],
+    css: [
+        "bootstrap/dist/css/bootstrap.css",
+        "bootstrap-social/bootstrap-social.css",
+        "font-awesome/css/font-awesome.css"
+    ]
+};
 
-    next();
+function getBowerComponentLink(file) {
+    return 'bower_components/' + file;
 }
 
-exports.register.attributes = {
-    name: 'assets'
+function getDevelopment() {
+    var js = [];
+    var css = [
+        'css/main.css',
+        'css/themes/default.css'
+    ];
+
+    js = js.concat(bower_components.js.map(getBowerComponentLink));
+    css = css.concat(bower_components.css.map(getBowerComponentLink));
+
+    var development = {
+        js: js,
+        css: css
+    };
+    return development;
+}
+
+function getProduction() {
+    var production = {
+        js: ['js/scripts.js'],
+        css: ['css/styles.css']
+    };
+    return production;
+}
+
+
+module.exports = {
+    development: getDevelopment(),
+    production: getProduction()
 };

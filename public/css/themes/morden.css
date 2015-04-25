@@ -1,0 +1,61 @@
+@import url(http://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(http://fonts.googleapis.com/css?family=Raleway:400,300);
+footer {
+  color: #fff;
+  background-color: #121212;
+}
+footer a:hover,
+footer a:focus {
+  color: #fff;
+}
+a {
+  transition: all 0.4s cubic-bezier(0.24, 0.45, 0.46, 0.92);
+}
+a:hover {
+  text-decoration: none;
+}
+ul,
+p {
+  font-family: 'Raleway', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+}
+.text-danger {
+  color: #d80017;
+}
+.dropdown-menu > li > a {
+  font-weight: 300;
+}
+.btn {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 3px;
+  transition: all 0.4s cubic-bezier(0.24, 0.45, 0.46, 0.92);
+}
+.btn:hover {
+  color: #fff;
+  background-color: #121212;
+}
+.btn-social {
+  padding: 10px 50px;
+}
+.btn-social :first-child {
+  width: 38px;
+  line-height: 38px;
+}
+.btn-link:hover {
+  color: #121212;
+  text-decoration: none;
+  background-color: transparent;
+}
+.alert {
+  font-family: 'Raleway', sans-serif;
+  color: #fff;
+}
+.navbar-default {
+  border: 0;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+}
+.navbar-default .navbar-nav > li > a {
+  transition: color 0.4s cubic-bezier(0.24, 0.45, 0.46, 0.92);
+}

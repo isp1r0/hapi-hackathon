@@ -1,7 +1,6 @@
 {
-  "name": "hapi-ninja",
-  "version": "0.2.2",
-  "homepage": "https://github.com/poeticninja/hapi-ninja",
+  "name": "hapi-video-feed",
+  "version": "0.0.2",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -9,6 +8,17 @@
     "bower_components",
     "public/bower_components",
     "test",
-    "tests"
-  ]
+    "tests",
+    "build",
+    "*.md",
+    "AUTHORS.txt",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "bootstrap": "~3.3.4",
+    "font-awesome": "~4.3.0",
+    "bootstrap-social": "~4.9.0"
+  }
 }

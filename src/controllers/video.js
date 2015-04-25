@@ -1,38 +1,20 @@
 "use strict";
 
-var Model = require('src/dao/video');
-var Hapi = require('hapi');
-var replyHelper = require('./reply');
-
+var Video = require('src/models/video');
+var _ = require('lodash');
+var crud = require('libs/controllers/crud');
+var replyHelper = require('libs/reply');
 
 (function (module) {
+	_.extend(module, crud(Video));
 
-
-module.findById = function (request, reply) {
-	Model.find(request.params, replyHelper.findOne(request, reply));
-};
-
-module.insert = function (request, reply) {
- 	var newUser = Model(request.payload); // 	payload validated
-	newUser.save(replyHelper.findOne(request, reply));
-};
-
-module.update = function (request, reply) {
-	var newUser = Model(request.payload); // payload validated
-	newUser.save(replyHelper.findOne(request, reply));
-};
-
-module.delete = function (request, reply) {
-	Model.findByIdAndRemove(request.params.id, replyHelper.delete(request, reply));
-};
-
-module.findAll = function (request, reply) {
-	var user = request.auth.credentials;
-	console.log(user);
-	if (!user || !user.facebook) {
-		return	reply(' no associated facebook account');
-	} 
-	Model.find({'user': user.facebook.id}, replyHelper.find(request, reply));
-};
+	module.findAll = function (request, reply) {
+		var user = request.auth.credentials;
+		console.log(user);
+		if (!user || !user.facebook) {
+			return	reply(' no associated facebook account');
+		} 
+		Video.find({'user': user.facebook.id}, replyHelper.find(request, reply));
+	};
 
 })(module.exports);

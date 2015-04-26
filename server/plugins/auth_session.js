@@ -27,11 +27,9 @@ function authCookie(server, options) {
             if(_.isEmpty(response.source.context)){
                 response.source.context = {};
             }
-
-            if(_.isEmpty(response.source.context.__me)){
-                response.source.context.__me = {};
-            }
+            
             response.source.context.__me = request.auth.credentials;
+            console.log(response.source.context);
         }
         return reply.continue();
     });

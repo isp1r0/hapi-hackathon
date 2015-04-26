@@ -10,16 +10,16 @@ Enter http://localhost:3000 for Site URL
 More: https://stackoverflow.com/questions/7131909/facebook-callback-appends-to-return-url
  */
 
-var config = { };
 
 // should end in /
-config.rootUrl  = process.env.ROOT_URL                  || 'http://localhost:3000/';
+var rootUrl  = process.env.ROOT_URL                  || 'http://localhost:3000/';
 
-config.facebook = {
+var facebook = {
     appId:          process.env.FACEBOOK_APPID          || '1601430036762977',
     appSecret:      process.env.FACEBOOK_APPSECRET      || '3eaf5a6a1b64cae0094375964a28cc6a',
     appNamespace:   process.env.FACEBOOK_APPNAMESPACE   || 'movietestforterry',
-    redirectUri:    process.env.FACEBOOK_REDIRECTURI    ||  config.rootUrl + 'login/callback'
+    redirectUri:    process.env.FACEBOOK_REDIRECTURI    ||  rootUrl + 'login/callback',
+    rootUrl: rootUrl
 };
 
-module.exports = config;
+module.exports = facebook;

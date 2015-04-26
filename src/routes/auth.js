@@ -35,8 +35,21 @@ module.exports = function(server, options){
             method: 'GET',
             path: '/logout',
             config: {
-                handler: authController.logout,
-                auth: 'session'
+                handler: authController.logout
+            }
+        },
+        {
+            method: 'GET',
+            path: '/login/callback',
+            config: {
+                handler: authController.loginCallback
+            }
+        },
+        {
+            method: 'GET',
+            path: '/auth/facebook',
+            config: {
+                handler: authController.facebook
             }
         }
     ]);

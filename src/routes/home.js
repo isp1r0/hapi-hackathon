@@ -27,7 +27,16 @@ module.exports = function(server, options){
             path: '/',
             config: {
                 handler: home,
-                id: 'index'
+                id: 'index',
+                auth: {
+                    mode: 'try',
+                    strategy: 'session'
+                },
+                plugins: {
+                    'hapi-auth-cookie': {
+                        redirectTo: false
+                    }
+                }
             }
         },        
         {

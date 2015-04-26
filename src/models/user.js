@@ -11,14 +11,10 @@ var userSchema = new mongoose.Schema({
   },
   
   profile: {
-    image: String,
+    picture: String,
     name: String,
-
-    facebook: {
-      email: String,
-      name: String,
-      id: String
-    }
+    genre: String,
+    facebook: Object
   }
 });
 
@@ -67,14 +63,15 @@ var Joi = require('joi');
 userSchema.statics.login = function (params, cb) {
 
   var schema = Joi.object().keys({
-    email: Joi.string().alphanum().min(3).max(30).required(),
+    email: Joi.string().min(3).max(30).required(),
     password: Joi.string().regex(/[a-zA-Z0-9]{3,30}/)
   });
 
 
   var result = Joi.validate(params, schema);
+
   if (result.error) {
-      return cb(null, "email and password must not be empty");
+      return cb(null, result.error);
   }
 
   var credentials = result.value;
@@ -99,31 +96,6 @@ userSchema.statics.login = function (params, cb) {
     });
   });
 };
-
-userSchema.statics.FacebookLogin = function (profile, access_token, cb) {
-  this.findOne({'email': profile.email}, function (err, user) {
-    if (err) {
-      return cb(err);
-    }
-    if (!user) {
-      user = User({
-          email: profile.email,
-          facebook: {
-              name: profile.name,
-              id: profile.id,
-              access_token: access_token
-          }
-      });
-    } else {
-      user.facebook.access_token = access_token;
-    }
-    user.save(function (err, data) {
-      cb(err, data);
-    });
-  });
-};
-
-
 
 var User = mongoose.model('User', userSchema);
 

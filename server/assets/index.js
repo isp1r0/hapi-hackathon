@@ -17,15 +17,20 @@ function getBowerComponentLink(file) {
     return 'bower_components/' + file;
 }
 
+var theme_name = 'modern';
+
 function getDevelopment() {
     var js = [];
+
+    var theme_file = 'css/themes/' + theme_name + '.css';
+
     var css = [
-        'css/main.css',
-        'css/themes/default.css'
+        'css/main.css'
     ];
 
     js = js.concat(bower_components.js.map(getBowerComponentLink));
-    css = css.concat(bower_components.css.map(getBowerComponentLink));
+    // css = bower_components.css.map(getBowerComponentLink)
+            //.concat(css);
 
     var development = {
         js: js,

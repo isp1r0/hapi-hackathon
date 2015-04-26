@@ -37,16 +37,9 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">        
         {{#if __me}}
-          <li {{#is title 'Login'}} class='active'{{/is}}>
-            <a href='/login'> Login </a>
-          </li>
-          <li {{#is title 'Create Account'}} class='active'{{/is}}>
-            <a href='/signup'> Create Account </a>
-          </li>
-        {{else}}
         <li class="dropdown">          
           <a href="#" data-toggle="dropdown" class="dropdown-toggle" aria-expanded="true">
-            <img src="{{__me.profile.image}}">
+            <img src="{{__me.profile.picture}}">
             {{__me.profile.name}}
             <i class="caret">              
             </i>
@@ -71,6 +64,13 @@
             </li>
           </ul>
         </li>
+        {{else}}
+          <li {{#is title 'Login'}} class='active'{{/is}}>
+            <a href='/login'> Login </a>
+          </li>
+          <li {{#is title 'Create Account'}} class='active'{{/is}}>
+            <a href='/signup'> Create Account </a>
+          </li>
         {{/if}}
       </ul>
     </div>

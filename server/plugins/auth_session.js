@@ -29,7 +29,7 @@ function authCookie(server, options) {
             }
             
             response.source.context.__me = request.auth.credentials;
-            console.log(response.source.context);
+            // console.log(response.source.context);
         }
         return reply.continue();
     });

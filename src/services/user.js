@@ -29,6 +29,7 @@ var LoginFB = function (profile, access_token, cb) {
     return user.save();
   }).then(function(user) {
     return {
+      _id: user._id,
       email: user.email,
       profile: user.profile
     };
@@ -40,6 +41,18 @@ module.authFacebook = function (code) {
     console.log(res);
     return LoginFB(res.profile, res.access_token);
   });
+};
+
+
+module.getFacebookAccessToken = function (user_id) {
+    return User.findOne(
+      {'profile.facebook.id': user_id}, 
+      {'access_token.facebook': 1}
+    ).then(function (res) {
+      if (res) {
+        return res.access_token.facebook;
+      }      
+    });
 };
 
 })(module.exports);

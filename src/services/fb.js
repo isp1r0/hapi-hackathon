@@ -28,4 +28,12 @@ module.getProfile = function (code) {
     });
 };
 
+module.getHome = function (access_token, filter, fields) {
+   return FacebookGraphAPI('/me/home', {
+    access_token: access_token,
+    filter: filter,
+    fields: fields
+   });
+};
+
 })(module.exports);

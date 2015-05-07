@@ -10,64 +10,42 @@ var replyHelper = require('libs/reply');
 (function (module) {
 	_.extend(module, crud(Video));
 
-module.findAll = function (request, reply) {
-	var user_id = getFacebookId(request.auth.credentials);
-	if (!user_id) {
-		return reply({
-			error: 'Your account has not linked to facebook'
-		});
-	}
+module.read = function (request, reply) {
+	var user_id = request.auth.credentials._id;
+	var source = request.params.source;
 	
-	VideoService.readFacebookMovies(user_id).then(
+	VideoService.read(user_id, source).then(
 		replyHelper.fulfilled(reply), 
 		replyHelper.rejected(reply)
 	);
 };
 
-module.facebookMovies = function (request, reply) {
-	var user_id = getFacebookId(request.auth.credentials);
-	if (!user_id) {
-		return reply.view('video', {
-			title: 'Your account has not linked to facebook'
-		});
-	}
-
-	return VideoService.readFacebookMovies(user_id).then(function (videos) {
-		reply.view('video', {
-			title: 'facebook',
-			videos: videos
-		});
+var replyView = function (reply, source, message) {
+	return reply.view('video', {
+		title: source,
+		source: source,
+		message: message
 	});
 };
 
-function getFacebookId(user) {
-	if (user && user.profile && user.profile.facebook) {
-		return user.profile.facebook.id;
-	}
-}
+module.view = function (request, reply) {
+	var source = request.params.source;
+	return replyView(reply, source);
+};
 
-module.pullFacebookMovies = function (request, reply) {	
-	var user_id = getFacebookId(request.auth.credentials);
-	if (!user_id) {
-		return reply.view('video', {
-			title: 'Facebook',
-			message: 'Your account has not linked to facebook'
-		});
-	}
+module.pull = function (request, reply) {	
+	var user_id = request.auth.credentials._id;
+	var source = request.params.source;
 	
-	VideoService.pullFacebookMovies(user_id).done(
-		function (videos) {
-			reply.view('video', {
-				title: 'Facebook',
-				videos: videos
-			});
-		}, 
-		function (error) {
-			console.log(error);
-			reply.view('video', {
-				title: 'Facebook',
-				message: error
-			});
+	VideoService.pull(user_id, source).done(function () {
+			replyView(reply, source);
+		}, function (error) {
+			if (error.type === 'token') {
+				reply.redirect('/auth/' + error.source);
+			} else {
+				console.log(error);
+				replyView(reply, source, error);
+			}			
 		}
 	);
 };

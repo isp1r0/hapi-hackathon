@@ -59,6 +59,7 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 userSchema.methods.public = function () {
   return {
+    _id: this._id,
     email: this.email,
     profile: this.profile
   };

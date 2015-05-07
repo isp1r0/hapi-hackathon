@@ -10,37 +10,36 @@ function authCookieRoute(options) {
 		method: options.method || 'GET',
 		path: options.path,
 		config: {
-			auth: {
-                mode: 'try',
-                strategy: 'session'
-            },
-            plugins: {
-                'hapi-auth-cookie': {
-                    redirectTo: false
-                }
-            },
+			auth: 'session',
 			handler: options.handler,
-			validator: options.validator
+			validate: options.validate
 		}
 	};
 }
 
 module.exports = function(server, options){
-	server.route(Crud({
-		prefix: '/videos', 
-		controller: VideoController, 
-		validator: require('src/validators/video'),
-		auth: "session"
-	}));
+	var sourceValidate = {
+		params: {
+			source: Joi.string().valid('facebook', 'twitter').default("facebook")
+		}
+	};
+
 	server.route([
 		authCookieRoute({
-			path: '/video/facebook', 
-			handler: VideoController.facebookMovies
+			path: '/video/{source}/getall',
+			handler: VideoController.read,
+			validate: sourceValidate
+		}),
+		authCookieRoute({
+			path: '/video/{source}', 
+			handler: VideoController.view,
+			validate: sourceValidate
 		}),
 		authCookieRoute({
 			method: 'POST',
-			path: '/video/facebook',
-			handler: VideoController.pullFacebookMovies
+			path: '/video/{source}',
+			handler: VideoController.pull,
+			validate: sourceValidate
 		})
 	]);
 };

@@ -4,12 +4,7 @@
 
 
 var User = require('src/models/user');
-var FB = require('src/services/fb');
 var _ = require('lodash');
-
-module.facebookLoginDialog = function () {
-  return FB.getLoginUrl({ scope: 'user_about_me,email,read_stream' });
-};
 
 
 function getPicture(provider, profile) {
@@ -78,14 +73,13 @@ module.oauth = function (credentials, current_email) {
 };
 
 
-module.getFacebookAccessToken = function (user_id) {
-    return User.findOne(
-      {'profile.facebook.id': user_id}, 
-      {'access_token.facebook': 1}
-    ).then(function (res) {
-      if (res) {
-        return res.access_token.facebook;
+module.getToken = function (user_id, provider) {
+    return User.findById(user_id).then(function (user) {
+      var token;
+      if (user) {
+        token = _.find(user.oauth, {provider: provider});
       }      
+      return token;
     });
 };
 

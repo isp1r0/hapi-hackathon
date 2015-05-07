@@ -40,16 +40,18 @@ module.exports = function(server, options){
         },
         {
             method: 'GET',
-            path: '/login/callback',
+            path: '/auth/facebook',
             config: {
-                handler: authController.loginCallback
+                auth: 'facebook',
+                handler: authController.oauth
             }
         },
         {
             method: 'GET',
-            path: '/auth/facebook',
+            path: '/auth/twitter',
             config: {
-                handler: authController.facebook
+                auth: 'twitter',
+                handler: authController.oauth
             }
         }
     ]);

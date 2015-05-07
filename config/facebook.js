@@ -18,8 +18,16 @@ var facebook = {
     appId:          process.env.FACEBOOK_APPID          || '1601430036762977',
     appSecret:      process.env.FACEBOOK_APPSECRET      || '3eaf5a6a1b64cae0094375964a28cc6a',
     appNamespace:   process.env.FACEBOOK_APPNAMESPACE   || 'movietestforterry',
-    redirectUri:    process.env.FACEBOOK_REDIRECTURI    ||  rootUrl + 'login/callback',
+    redirectUri:    process.env.FACEBOOK_REDIRECTURI    ||  rootUrl + 'auth/callback',
     rootUrl: rootUrl
 };
 
-module.exports = facebook;
+
+module.exports = {
+	password: 'cookie_based',
+	provider: 'facebook',
+    clientId: facebook.appId,                               // Set client id
+    clientSecret: facebook.appSecret,
+    location: facebook.redirectUri,
+    scope: ['user_about_me', 'email', 'read_stream']
+};

@@ -6,16 +6,21 @@ var userSchema = new mongoose.Schema({
   email: { type: String, index: {unique: true}, lowercase: true },
   password: String,
 
-  access_token: {
-    facebook: String
-  },
-  
   profile: {
     picture: String,
-    name: String,
-    genre: String,
-    facebook: Object
-  }
+    name: String
+  },
+
+  social: [{
+    provider: String,
+    profile: Object
+  }],
+
+  oauth: [{
+    provider: String,
+    token: String, 
+    secret: String
+  }]
 });
 
 /**

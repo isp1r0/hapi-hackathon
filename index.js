@@ -44,12 +44,18 @@ server.views({
 });
 
 var plugins = require('server/plugins');
+var cookie_conf = require('config/cookie');
 plugins.auth_session(server, {
-    password: 'secret',
-    cookie: 'sid-example',
+    password:  cookie_conf.password,
+    cookie: cookie_conf.cookie_name,
     redirectTo: '/login',
     isSecure: false
 });
+
+plugins.oauth(server, [
+    require('config/twitter'),
+    require('config/facebook')
+]);
 
 var routes = require('src/routes');
 _.forEach(routes, function (route, name) {

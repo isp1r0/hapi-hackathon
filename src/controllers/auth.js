@@ -39,36 +39,18 @@ module.logout = function (request, reply) {
     return reply.redirect('/');
 }; 
 
+var cookie_conf = require('config/cookie');
 
-module.facebook = function (request, reply) {
-    return reply.redirect(UserService.facebookLoginDialog());
-};
-
-
-module.loginCallback = function (request, reply) {
-    if (request.query.error) {
-        // user might have disallowed the app
-        return reply('login-error ' + request.query.error_description).code(400);
-    }
-    var code = request.query.code;
-    if (!code) {
-        // 
-        return reply.redirect('/');
-    }
-
-    UserService.authFacebook(code).then(function (user) {
-        if (!user) {
-            throw new Error("cannot save user to mongodb ");
-        }
+module.oauth = function (request, reply) {
+    var user = request.state[cookie_conf.cookie_name] || {};
+    UserService.oauth(request.auth.credentials, user.email).then(function (user) {        
         request.auth.session.set(user);
     })
-    .done(function(err) {
-        if (err) {
-            console.log(err);
-            reply().code(500);
-        } else {
-            reply.redirect('/');
-        }        
+    .done(function() {
+        reply.redirect('/');
+    }, function (err) {
+        console.log(err);
+        reply().code(500);
     });
 };
 
